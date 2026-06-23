@@ -56,17 +56,17 @@
   }
   .video-box{position:relative;border-radius:11px;overflow:hidden;background:#000;aspect-ratio:16/9}
   .video-box video{width:100%;height:100%;display:block;object-fit:cover}
-  .video-box .poster{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:pointer;
+  .sound{
+    position:absolute;bottom:14px;left:14px;display:inline-flex;align-items:center;gap:8px;
+    background:rgba(11,54,64,.78);color:#fff;border:1px solid rgba(201,162,75,.6);
+    border-radius:999px;padding:9px 16px 9px 12px;cursor:pointer;font-family:'Tajawal',sans-serif;
+    font-size:14px;font-weight:500;backdrop-filter:blur(4px);transition:background .25s ease,transform .2s ease;
   }
-  .play{
-    position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;
-    background:var(--gold);border:none;cursor:pointer;display:grid;place-items:center;
-    box-shadow:0 10px 30px rgba(201,162,75,.5);transition:transform .25s ease,background .25s ease;
-  }
-  .play:hover{transform:scale(1.07);background:#d8b25e}
-  .play svg{width:30px;height:30px;margin-right:-4px;fill:#fff}
-  .play:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .sound:hover{background:rgba(11,54,64,.92);transform:translateY(-1px)}
+  .sound:focus-visible{outline:3px solid #fff;outline-offset:2px}
+  .sound svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sound.on{border-color:rgba(255,255,255,.35)}
+  .sound.on svg{stroke:#fff}
 
   /* ===== كلمة الترحيب ===== */
   .welcome{padding:64px 0 18px;text-align:center}
@@ -152,11 +152,12 @@
 
     <div class="frame reveal">
       <div class="video-box">
-        <video id="welcome" playsinline preload="none" controls
-               poster="poster.jpg" style="display:none"></video>
-        <img class="poster" id="posterImg" src="poster.jpg" alt="كلمة ترحيب — منصة جهات">
-        <button class="play" id="playBtn" aria-label="تشغيل كلمة الترحيب">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <video id="welcome" playsinline muted autoplay loop preload="auto"
+               poster="poster.jpg" src="welcome.mp4"></video>
+        <button class="sound" id="soundBtn" aria-label="تشغيل الصوت">
+          <svg id="icMute" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg>
+          <svg id="icSound" viewBox="0 0 24 24" style="display:none"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg>
+          <span id="soundLbl">اضغط للصوت</span>
         </button>
       </div>
     </div>
@@ -217,20 +218,26 @@
 </footer>
 
 <script>
-  // تشغيل الفيديو عند الضغط
+  // تشغيل تلقائي مكتوم + زر للصوت
   (function(){
     var v=document.getElementById('welcome');
-    var poster=document.getElementById('posterImg');
-    var btn=document.getElementById('playBtn');
-    function play(){
-      v.style.display='block'; poster.style.display='none'; btn.style.display='none';
-      v.setAttribute('controls','');
-      // مصدر الفيديو يُحمّل عند التشغيل فقط
-      if(!v.src){ v.src='welcome.mp4'; }
-      v.play().catch(function(){});
-    }
-    btn.addEventListener('click',play);
-    poster.addEventListener('click',play);
+    var btn=document.getElementById('soundBtn');
+    var lbl=document.getElementById('soundLbl');
+    var icMute=document.getElementById('icMute');
+    var icSound=document.getElementById('icSound');
+    // محاولة التشغيل التلقائي (مكتوم مسموح في كل المتصفحات)
+    function tryPlay(){ var p=v.play(); if(p&&p.catch){p.catch(function(){});} }
+    tryPlay();
+    document.addEventListener('click',function once(){ if(v.paused) tryPlay(); document.removeEventListener('click',once); });
+    btn.addEventListener('click',function(){
+      v.muted=!v.muted;
+      if(!v.muted){
+        v.currentTime=0; tryPlay();
+        lbl.textContent='كتم الصوت'; icMute.style.display='none'; icSound.style.display='block'; btn.classList.add('on');
+      }else{
+        lbl.textContent='اضغط للصوت'; icMute.style.display='block'; icSound.style.display='none'; btn.classList.remove('on');
+      }
+    });
   })();
 
   // دخول ناعم عند التمرير
