@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة جهات — لصياغة العقود الذكية</title>
+<meta name="description" content="منصة جهات: الذكاء الاصطناعي في خدمة صياغة العقود، بدقة الخبير وسرعة اللحظة.">
+<link rel="icon" href="jehat_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}</style></noscript>
+<style>
+  :root{
+    --teal-900:#0B3640;   /* الأعمق */
+    --teal-700:#0E5A6B;   /* الأساسي */
+    --teal-500:#1A9E94;   /* مربعات جهات */
+    --gold:#C9A24B;       /* اللمسة الملكية */
+    --gold-soft:#E7D4A6;
+    --ivory:#FBFAF7;      /* خلفية عاجية */
+    --ink:#14272C;
+    --muted:#5C6B6E;
+    --line:rgba(14,90,107,.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Tajawal',sans-serif;background:var(--ivory);color:var(--ink);
+    line-height:1.85;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* ===== شريط علوي ===== */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+  .topbar img{height:46px}
+  .nafath{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:500}
+  .nafath .dot{width:7px;height:7px;border-radius:50%;background:var(--teal-500)}
+
+  /* ===== Hero ===== */
+  .hero{position:relative;text-align:center;padding:26px 0 50px}
+  .eyebrow{font-family:'Aref Ruqaa',serif;color:var(--gold);font-size:20px;letter-spacing:.5px;margin-bottom:6px}
+  .hero h1{
+    font-family:'Aref Ruqaa',serif;font-weight:700;color:var(--teal-700);
+    font-size:clamp(34px,6vw,60px);line-height:1.25;margin-bottom:14px;
+  }
+  .hero .lede{max-width:620px;margin:0 auto 34px;color:var(--muted);font-size:clamp(15px,2.2vw,18px);font-weight:400}
+
+  /* إطار الفيديو الرسمي بحاشية ذهبية */
+  .frame{
+    position:relative;max-width:820px;margin:0 auto;padding:14px;
+    background:linear-gradient(160deg,var(--teal-900),var(--teal-700));
+    border-radius:18px;box-shadow:0 30px 70px -30px rgba(11,54,64,.55);
+  }
+  .frame::before{
+    content:"";position:absolute;inset:6px;border:1px solid rgba(201,162,75,.55);border-radius:12px;pointer-events:none;
+  }
+  .video-box{position:relative;border-radius:11px;overflow:hidden;background:#000;aspect-ratio:16/9}
+  .video-box video{width:100%;height:100%;display:block;object-fit:cover}
+  .video-box .poster{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:pointer;
+  }
+  .play{
+    position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;
+    background:var(--gold);border:none;cursor:pointer;display:grid;place-items:center;
+    box-shadow:0 10px 30px rgba(201,162,75,.5);transition:transform .25s ease,background .25s ease;
+  }
+  .play:hover{transform:scale(1.07);background:#d8b25e}
+  .play svg{width:30px;height:30px;margin-right:-4px;fill:#fff}
+  .play:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+  /* ===== كلمة الترحيب ===== */
+  .welcome{padding:64px 0 18px;text-align:center}
+  .welcome .seal{
+    width:54px;height:54px;margin:0 auto 18px;border-radius:50%;
+    border:1.5px solid var(--gold);display:grid;place-items:center;color:var(--gold);
+    font-family:'Aref Ruqaa',serif;font-size:24px;
+  }
+  .welcome h2{font-family:'Aref Ruqaa',serif;color:var(--teal-700);font-size:clamp(24px,4vw,34px);margin-bottom:18px}
+  .welcome p{max-width:680px;margin:0 auto;font-size:clamp(15px,2.2vw,18px);color:#33474B}
+  .rule{width:90px;height:2px;background:var(--gold);margin:26px auto 0;opacity:.8}
+
+  /* ===== المزايا ===== */
+  .features{padding:54px 0}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px 24px;text-align:center;
+    transition:transform .3s ease,box-shadow .3s ease;
+  }
+  .card:hover{transform:translateY(-5px);box-shadow:0 20px 40px -24px rgba(11,54,64,.35)}
+  .card .ic{
+    width:56px;height:56px;margin:0 auto 16px;border-radius:14px;display:grid;place-items:center;
+    background:rgba(26,158,148,.10);color:var(--teal-700);
+  }
+  .card .ic svg{width:28px;height:28px;stroke:var(--teal-700);fill:none;stroke-width:1.8}
+  .card h3{font-family:'Tajawal',sans-serif;font-weight:700;color:var(--teal-700);font-size:19px;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:15px}
+
+  /* ===== CTA ===== */
+  .cta{
+    position:relative;margin:30px 0 60px;padding:54px 24px;text-align:center;border-radius:22px;overflow:hidden;
+    background:linear-gradient(160deg,var(--teal-700),var(--teal-900));color:#fff;
+  }
+  .cta::after{
+    content:"";position:absolute;top:-40px;left:-40px;width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,rgba(201,162,75,.30),transparent 70%);
+  }
+  .cta h2{font-family:'Aref Ruqaa',serif;font-size:clamp(24px,4vw,32px);margin-bottom:10px;position:relative}
+  .cta p{color:#cfe1e2;margin-bottom:26px;position:relative}
+  .btn{
+    position:relative;display:inline-flex;align-items:center;gap:12px;background:var(--gold);color:#1c1c1c;
+    font-family:'Tajawal',sans-serif;font-weight:700;font-size:18px;padding:16px 40px;border-radius:999px;
+    text-decoration:none;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+    box-shadow:0 14px 34px -10px rgba(201,162,75,.6);
+  }
+  .btn:hover{transform:translateY(-2px);background:#d8b25e;box-shadow:0 18px 40px -10px rgba(201,162,75,.7)}
+  .btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .btn svg{width:22px;height:22px;fill:#1c1c1c}
+
+  /* ===== التذييل ===== */
+  footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:var(--muted);font-size:14px}
+  footer .brand{font-family:'Aref Ruqaa',serif;color:var(--teal-700);font-size:18px;margin-bottom:6px}
+  footer .meta span{margin:0 8px}
+
+  /* دخول ناعم */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:760px){
+    .grid{grid-template-columns:1fr}
+    .topbar .nafath{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+    .card:hover,.btn:hover,.play:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="topbar">
+    <img src="jehat_logo.png" alt="منصة جهات">
+    <div class="nafath"><span class="dot"></span> متكاملة مع نفاذ</div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="eyebrow">منصة جهات</div>
+    <h1>أهلاً بكم في جهات</h1>
+    <p class="lede">الذكاء الاصطناعي في خدمة صياغة العقود — بدقّة الخبير، وسرعة اللحظة.</p>
+
+    <div class="frame reveal">
+      <div class="video-box">
+        <video id="welcome" playsinline preload="none" controls
+               poster="poster.jpg" style="display:none"></video>
+        <img class="poster" id="posterImg" src="poster.jpg" alt="كلمة ترحيب — منصة جهات">
+        <button class="play" id="playBtn" aria-label="تشغيل كلمة الترحيب">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- كلمة الترحيب -->
+  <section class="welcome reveal">
+    <div class="seal">ج</div>
+    <h2>كلمة ترحيب</h2>
+    <p>
+      يسعد <strong>منصة جهات</strong> أن ترحّب بكم. نقدّم لكم تجربة جديدة في صياغة العقود،
+      تجمع بين الخبرة القانونية ودقّة الذكاء الاصطناعي، لتحصلوا على عقودٍ احترافية مكتملة في
+      دقائق معدودة — بكل خصوصية واحتراف. تفضّلوا بتجربة مساعدنا الذكي، وصِفوا ما تحتاجونه
+      نصاً أو صوتاً، ودَعوا الصياغة علينا.
+    </p>
+    <div class="rule"></div>
+  </section>
+
+  <!-- المزايا -->
+  <section class="features">
+    <div class="grid">
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h12M3 19h18"/><circle cx="19" cy="12" r="2.4"/></svg></div>
+        <h3>بالنص أو الصوت</h3>
+        <p>صِف ما تريد كتابةً أو رسالةً صوتية، ويفهمك المساعد ويتولّى الباقي.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/><path d="M3 7v10a4 4 0 004 4h10"/></svg></div>
+        <h3>صياغة دقيقة</h3>
+        <p>عقود مكتملة الأركان، يسأل عمّا ينقص ولا يفترض ولا يخترع.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg></div>
+        <h3>بهوية رسمية</h3>
+        <p>مستند أنيق بترويسة جهات ورقم مرجعي، جاهز للاعتماد والتوثيق.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta reveal">
+    <h2>ابدأ صياغة عقدك الآن</h2>
+    <p>يفتح المحادثة مباشرةً مع مساعد جهات على تيليجرام.</p>
+    <a class="btn" href="https://t.me/contracts_agent_gandallah_bot" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M21.9 4.3l-3.3 15.6c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9 9-8.1c.4-.3-.1-.5-.6-.2L6.4 13.3l-4.8-1.5c-1-.3-1-1 .2-1.5l18.7-7.2c.9-.3 1.6.2 1.4 1.2z"/></svg>
+      ابدأ الآن عبر تيليجرام
+    </a>
+  </section>
+</div>
+
+<footer>
+  <div class="brand">منصة جهات</div>
+  <div class="meta">
+    <span>الرياض، المملكة العربية السعودية</span>·
+    <span>info@jehat.sa</span>·
+    <span>0553777769</span>
+  </div>
+</footer>
+
+<script>
+  // تشغيل الفيديو عند الضغط
+  (function(){
+    var v=document.getElementById('welcome');
+    var poster=document.getElementById('posterImg');
+    var btn=document.getElementById('playBtn');
+    function play(){
+      v.style.display='block'; poster.style.display='none'; btn.style.display='none';
+      v.setAttribute('controls','');
+      // مصدر الفيديو يُحمّل عند التشغيل فقط
+      if(!v.src){ v.src='welcome.mp4'; }
+      v.play().catch(function(){});
+    }
+    btn.addEventListener('click',play);
+    poster.addEventListener('click',play);
+  })();
+
+  // دخول ناعم عند التمرير
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(en){
+      en.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
+    },{threshold:.15});
+    els.forEach(function(e){io.observe(e)});
+  })();
+</script>
+</body>
+</html>
