@@ -71,6 +71,11 @@
   }
   .btn-ghost:hover{color:var(--gold);border-color:var(--gold)}
   .btn-ghost:focus-visible{outline:2px solid var(--teal-700);outline-offset:3px;border-radius:4px}
+  .btn-line{display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--teal-700);
+    border:1.5px solid var(--teal-700);font-family:'Tajawal',sans-serif;font-weight:700;font-size:16px;
+    padding:13px 30px;border-radius:999px;text-decoration:none;transition:background .2s,color .2s,transform .2s}
+  .btn-line:hover{background:var(--teal-700);color:#fff;transform:translateY(-2px)}
+  .btn-line svg{width:19px;height:19px;fill:currentColor}
 
   /* ===== كلمة الترحيب ===== */
   .welcome{padding:64px 0 18px;text-align:center}
@@ -174,6 +179,10 @@
         ابدأ الآن عبر تيليجرام
       </a>
       <button class="btn-ghost" id="replayBtn">▷ إعادة مشاهدة كلمة الترحيب</button>
+      <a class="btn-line" href="contracts.html">
+        <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6zM14 2v6h6M8 13h8M8 17h6"/></svg>
+        سجل العقود الصادرة
+      </a>
     </div>
   </section>
 
