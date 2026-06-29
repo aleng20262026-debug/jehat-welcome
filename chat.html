@@ -60,12 +60,14 @@
   .welcome-strip h1{font-family:'Aref Ruqaa',serif;font-size:19px;margin-bottom:4px}
   .welcome-strip p{font-size:13px;color:#cfe1e2;line-height:1.7}
 
-  .chat{position:relative;flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(circle at 18% 8%, #eef6f7, #e6f0f1 60%, #e1edee)}
+  .chat{position:relative;flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;
+        background:linear-gradient(135deg,#e9f4f4,#dfeef0,#edf4ea,#e3f0f1);background-size:400% 400%;animation:bgshift 20s ease infinite}
+  @keyframes bgshift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
   .bg-orbs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-  .orb{position:absolute;border-radius:50%;filter:blur(46px);opacity:.30;animation:floaty 16s ease-in-out infinite}
-  .orb.a{width:240px;height:240px;background:#1A9E94;top:-40px;right:-30px;animation-delay:0s}
-  .orb.b{width:200px;height:200px;background:#C9A24B;bottom:40px;left:-40px;animation-delay:-5s;opacity:.22}
-  .orb.c{width:180px;height:180px;background:#0E5A6B;top:45%;right:35%;animation-delay:-9s;opacity:.16}
+  .orb{position:absolute;border-radius:50%;filter:blur(48px);animation:floaty 16s ease-in-out infinite}
+  .orb.a{width:260px;height:260px;background:#1A9E94;top:-50px;right:-40px;opacity:.34;animation-delay:0s}
+  .orb.b{width:210px;height:210px;background:#C9A24B;bottom:30px;left:-50px;opacity:.26;animation-delay:-5s}
+  .orb.c{width:190px;height:190px;background:#0E5A6B;top:42%;right:30%;opacity:.18;animation-delay:-9s}
   @keyframes floaty{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-26px,30px) scale(1.08)}66%{transform:translate(22px,-24px) scale(.96)}}
   .chat > .msg, .chat > .typing, .chat > .dl{position:relative;z-index:1}
   .msg{max-width:82%;padding:11px 15px;border-radius:16px;font-size:14.5px;line-height:1.8;white-space:pre-wrap;word-wrap:break-word;position:relative;z-index:1}
@@ -98,18 +100,21 @@
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(214,69,69,.5)}50%{box-shadow:0 0 0 10px rgba(214,69,69,0)}}
   .hint{text-align:center;font-size:11.5px;color:var(--muted);padding:0 14px 10px;background:#fff}
 
-  /* ====== فيديو الإرشاد في الركن ====== */
-  .guide{position:fixed;top:74px;right:14px;width:200px;z-index:60;border-radius:16px;overflow:hidden;
-    box-shadow:0 16px 40px -16px rgba(11,54,64,.65);border:2px solid var(--gold);background:#06262E;
-    opacity:0;transform:translateY(-10px) scale(.96);transition:opacity .5s ease,transform .5s ease}
-  .guide.show{opacity:1;transform:none}
+  /* ====== فيديو الإرشاد (نافذة وسط الشاشة) ====== */
+  .guide{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+    background:rgba(6,38,46,.6);backdrop-filter:blur(4px);opacity:0;transition:opacity .45s ease}
+  .guide.show{display:flex;opacity:1}
+  .guide .gbox{width:min(88vw,380px);background:#06262E;border:2px solid var(--gold);border-radius:20px;
+    overflow:hidden;box-shadow:0 30px 80px -20px rgba(0,0,0,.65);position:relative;
+    transform:translateY(12px) scale(.97);transition:transform .45s ease}
+  .guide.show .gbox{transform:none}
   .guide video{width:100%;display:block;aspect-ratio:1/1;object-fit:cover;background:#06262E}
-  .guide .g-cap{font-size:11px;color:#fff;background:rgba(11,54,64,.92);padding:7px 9px;line-height:1.5;text-align:center}
-  .guide .g-btns{position:absolute;top:6px;left:6px;display:flex;gap:6px}
-  .guide .g-btns button{width:27px;height:27px;border-radius:50%;border:none;cursor:pointer;background:rgba(11,54,64,.75);color:#fff;font-size:13px;display:grid;place-items:center;backdrop-filter:blur(3px)}
-  .guide .g-btns button:hover{background:rgba(11,54,64,.95)}
-  @media(max-width:620px){.guide{width:138px;top:62px}}
-  @media(prefers-reduced-motion:reduce){.orb{animation:none}.guide{transition:none}}
+  .guide .g-cap{font-size:13.5px;color:#fff;background:rgba(11,54,64,.96);padding:12px 14px;text-align:center;line-height:1.7}
+  .guide .g-close,.guide .g-sound{position:absolute;top:9px;width:32px;height:32px;border-radius:50%;border:none;
+    cursor:pointer;background:rgba(11,54,64,.82);color:#fff;font-size:15px;z-index:2;display:grid;place-items:center;backdrop-filter:blur(3px)}
+  .guide .g-close{left:9px}.guide .g-sound{left:48px}
+  .guide .g-close:hover,.guide .g-sound:hover{background:rgba(11,54,64,.98)}
+  @media(prefers-reduced-motion:reduce){.orb{animation:none}.chat{animation:none}.guide,.guide .gbox{transition:none}}
   @media(prefers-reduced-motion:reduce){
     body::before,body::after,.welcome-strip{animation:none}
     .sq{display:none}
@@ -159,14 +164,14 @@
   </div>
 </div>
 
-<!-- فيديو الإرشاد في الركن -->
+<!-- فيديو الإرشاد (وسط الشاشة، يتقفل لوحده) -->
 <div class="guide" id="guide">
-  <div class="g-btns">
-    <button class="g-sound" id="gSound" aria-label="الصوت">🔊</button>
+  <div class="gbox">
     <button class="g-close" id="gClose" aria-label="إغلاق">✕</button>
+    <button class="g-sound" id="gSound" aria-label="الصوت">🔊</button>
+    <video id="guideVid" playsinline muted autoplay preload="auto" poster="poster.jpg" src="guide.mp4"></video>
+    <div class="g-cap">سأطرح عليك بعض الأسئلة عن الأطراف والتفاصيل — أجِب عنها ليخرج عقدك دقيقاً</div>
   </div>
-  <video id="guideVid" playsinline muted autoplay loop poster="poster.jpg" src="guide.mp4"></video>
-  <div class="g-cap">سأطرح عليك بعض الأسئلة — أجب عنها ليخرج عقدك دقيقاً</div>
 </div>
 
 <script>
@@ -272,15 +277,17 @@
     }).catch(function(){ el('msg sys','يرجى السماح باستخدام المايكروفون.'); });
   });
 
-  // ====== فيديو الإرشاد بالركن ======
+  // ====== فيديو الإرشاد (نافذة وسط، تتقفل لوحدها) ======
   (function(){
     var g=document.getElementById('guide'),gv=document.getElementById('guideVid');
     var gs=document.getElementById('gSound'),gc=document.getElementById('gClose');
     var hidden=false;
-    gv.addEventListener('error',function(){ g.style.display='none'; hidden=true; });
-    gc.addEventListener('click',function(){ g.style.display='none'; gv.pause(); });
-    gs.addEventListener('click',function(){ gv.muted=!gv.muted; gs.textContent=gv.muted?'🔊':'🔈'; if(!gv.muted){gv.currentTime=0;var p=gv.play();if(p&&p.catch)p.catch(function(){});} });
-    window.__startGuide=function(){ if(hidden)return; g.classList.add('show'); var p=gv.play(); if(p&&p.catch)p.catch(function(){}); };
+    function closeG(){ g.classList.remove('show'); gv.pause(); setTimeout(function(){g.style.display='none';},450); }
+    gv.addEventListener('error',function(){ hidden=true; g.style.display='none'; });
+    gv.addEventListener('ended',closeG);          // يتقفل لوحده لما يخلّص
+    gc.addEventListener('click',closeG);
+    gs.addEventListener('click',function(){ gv.muted=!gv.muted; gs.textContent=gv.muted?'🔊':'🔈'; if(!gv.muted){var p=gv.play();if(p&&p.catch)p.catch(function(){});} });
+    window.__startGuide=function(){ if(hidden)return; g.style.display='flex'; void g.offsetWidth; g.classList.add('show'); var p=gv.play(); if(p&&p.catch)p.catch(function(){}); };
   })();
 
   // ====== شاشة الفيديو ======
