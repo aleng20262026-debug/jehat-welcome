@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سجل العقود — منصة جهات</title>
+<link rel="icon" href="jehat_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* عنوان webhook السجل (غيّره هنا فقط لو اتغيّر) :
+     https://148-230-114-103.nip.io/webhook/odoo-contracts  */
+  :root{--teal-900:#0B3640;--teal-700:#0E5A6B;--teal-500:#1A9E94;--gold:#C9A24B;--ivory:#FBFAF7;--ink:#14272C;--muted:#5C6B6E;--line:rgba(14,90,107,.14)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Tajawal',sans-serif;background:var(--ivory);color:var(--ink);-webkit-font-smoothing:antialiased;padding:0 0 40px}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:5}
+  .top .id{display:flex;align-items:center;gap:10px}
+  .top img{height:36px}.top .t{font-family:'Aref Ruqaa',serif;color:var(--teal-700);font-size:18px}
+  .top .nf{color:var(--muted);font-size:12px}
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px}
+  .head{text-align:center;padding:34px 0 22px}
+  .head h1{font-family:'Aref Ruqaa',serif;color:var(--teal-700);font-size:28px;margin-bottom:6px}
+  .head p{color:var(--muted);font-size:14px}
+  .bar{display:flex;gap:10px;margin-bottom:18px}
+  .bar input{flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 16px;font-family:inherit;font-size:14px;outline:none}
+  .bar input:focus{border-color:var(--teal-500)}
+  .bar button{background:var(--teal-700);color:#fff;border:none;border-radius:12px;padding:0 18px;cursor:pointer;font-family:inherit;font-weight:700}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  th,td{padding:13px 14px;text-align:right;font-size:14px;border-bottom:1px solid var(--line)}
+  th{background:var(--teal-700);color:#fff;font-weight:700;font-size:13px}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#f4f8f9}
+  .ref{font-weight:700;color:var(--teal-700);direction:ltr;text-align:right}
+  .badge{display:inline-block;background:rgba(26,158,148,.12);color:var(--teal-700);font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+  .dl{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#1c1c1c;text-decoration:none;font-weight:700;font-size:13px;padding:7px 13px;border-radius:9px;cursor:pointer;border:none;font-family:inherit}
+  .dl:hover{background:#d8b25e}
+  .empty,.loading{text-align:center;color:var(--muted);padding:50px 20px;font-size:15px}
+  .empty svg{width:54px;height:54px;stroke:var(--line);fill:none;stroke-width:1.5;margin-bottom:12px}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:26px}
+  @media(max-width:620px){.hide-sm{display:none}}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="id"><img src="jehat_logo.png" alt="جهات"><span class="t">منصة جهات</span></div>
+    <span class="nf">سجل العقود الصادرة</span>
+  </div>
+
+  <div class="wrap">
+    <div class="head">
+      <h1>سجل العقود</h1>
+      <p>جميع العقود الصادرة عبر منصة جهات</p>
+    </div>
+
+    <div class="bar">
+      <input id="q" type="text" placeholder="ابحث برقم العقد أو النوع أو الجهة...">
+      <button onclick="render()">بحث</button>
+    </div>
+
+    <div id="out"><div class="loading">جارٍ تحميل السجل…</div></div>
+    <footer>منصة جهات · الرياض · info@jehat.sa</footer>
+  </div>
+
+<script>
+  var LIST_WEBHOOK = "https://148-230-114-103.nip.io/webhook/odoo-contracts";
+  var VIEW_BASE = "c.html?ref=";   // صفحة عرض العقد الواحد
+  var DATA = [];
+
+  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+
+  function render(){
+    var q=(document.getElementById('q').value||'').trim().toLowerCase();
+    var rows=DATA.filter(function(r){
+      if(!q) return true;
+      return (r.ref||'').toLowerCase().includes(q)||(r.title||'').toLowerCase().includes(q)||(r.issued_by||'').toLowerCase().includes(q);
+    });
+    var out=document.getElementById('out');
+    if(!rows.length){
+      out.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg><div>لا توجد عقود مطابقة بعد. ستظهر العقود هنا فور إصدارها.</div></div>';
+      return;
+    }
+    var h='<table><thead><tr><th>الرقم المرجعي</th><th>نوع العقد</th><th class="hide-sm">جهة الإصدار</th><th class="hide-sm">التاريخ</th><th>العقد</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+      h+='<tr><td class="ref">'+esc(r.ref)+'</td><td>'+esc(r.title)+'</td>'+
+         '<td class="hide-sm">'+esc(r.issued_by&&r.issued_by!=='—'?r.issued_by:'-')+'</td>'+
+         '<td class="hide-sm">'+esc(r.date)+'</td>'+
+         '<td><a class="dl" href="'+VIEW_BASE+encodeURIComponent(r.ref)+'" target="_blank">عرض / تحميل</a></td></tr>';
+    });
+    h+='</tbody></table>';
+    out.innerHTML=h;
+  }
+
+  fetch(LIST_WEBHOOK).then(function(r){return r.json();}).then(function(d){
+    DATA = (d&&d.contracts)?d.contracts:(Array.isArray(d)?d:[]);
+    render();
+  }).catch(function(){
+    document.getElementById('out').innerHTML='<div class="empty">تعذّر تحميل السجل. تأكد من الاتصال.</div>';
+  });
+</script>
+</body>
+</html>
