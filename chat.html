@@ -19,7 +19,21 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
-  body{font-family:'Tajawal',sans-serif;background:var(--ivory);color:var(--ink);-webkit-font-smoothing:antialiased}
+  body{font-family:'Tajawal',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;position:relative;overflow:hidden}
+  /* خلفية متحركة فاخرة */
+  body::before{content:"";position:fixed;inset:0;z-index:-2;
+    background:linear-gradient(135deg,#0B3640,#0E5A6B,#103f4a,#0B3640);
+    background-size:400% 400%;animation:grad 18s ease infinite}
+  @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  /* وهج ذهبي/تركوازي يتحرك */
+  body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(420px circle at 18% 22%,rgba(201,162,75,.16),transparent 60%),
+               radial-gradient(480px circle at 82% 78%,rgba(26,158,148,.18),transparent 60%);
+    animation:floatglow 14s ease-in-out infinite alternate}
+  @keyframes floatglow{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-24px,18px) scale(1.08)}}
+  /* مربعات جهات تطفو */
+  .sq{position:fixed;z-index:-1;border-radius:5px;opacity:.5;animation:rise linear infinite}
+  @keyframes rise{0%{transform:translateY(20vh) rotate(0);opacity:0}10%{opacity:.5}100%{transform:translateY(-110vh) rotate(220deg);opacity:0}}
   .noscript-hide{}
 
   /* ====== شاشة الفيديو الافتتاحية ====== */
@@ -35,19 +49,26 @@
   body.intro-open{overflow:hidden}
 
   /* ====== الهيكل ====== */
-  .app{display:flex;flex-direction:column;height:100vh;max-width:760px;margin:0 auto;background:#fff;box-shadow:0 0 60px -30px rgba(11,54,64,.4)}
+  .app{display:flex;flex-direction:column;height:100vh;max-width:760px;margin:0 auto;background:rgba(255,255,255,.97);box-shadow:0 40px 90px -30px rgba(0,0,0,.55);backdrop-filter:blur(2px)}
   header.bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:#fff}
   header.bar .id{display:flex;align-items:center;gap:10px}
   header.bar img{height:34px}
   header.bar .t{font-weight:700;color:var(--teal-700);font-size:15px}
   header.bar .nf{color:var(--muted);font-size:12px}
 
-  .welcome-strip{padding:16px 18px;background:linear-gradient(160deg,var(--teal-700),var(--teal-900));color:#fff}
+  .welcome-strip{padding:16px 18px;background:linear-gradient(120deg,var(--teal-700),var(--teal-900),var(--teal-500),var(--teal-700));background-size:300% 300%;animation:grad 12s ease infinite;color:#fff}
   .welcome-strip h1{font-family:'Aref Ruqaa',serif;font-size:19px;margin-bottom:4px}
   .welcome-strip p{font-size:13px;color:#cfe1e2;line-height:1.7}
 
-  .chat{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:var(--ivory)}
-  .msg{max-width:82%;padding:11px 15px;border-radius:16px;font-size:14.5px;line-height:1.8;white-space:pre-wrap;word-wrap:break-word}
+  .chat{position:relative;flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:radial-gradient(circle at 18% 8%, #eef6f7, #e6f0f1 60%, #e1edee)}
+  .bg-orbs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  .orb{position:absolute;border-radius:50%;filter:blur(46px);opacity:.30;animation:floaty 16s ease-in-out infinite}
+  .orb.a{width:240px;height:240px;background:#1A9E94;top:-40px;right:-30px;animation-delay:0s}
+  .orb.b{width:200px;height:200px;background:#C9A24B;bottom:40px;left:-40px;animation-delay:-5s;opacity:.22}
+  .orb.c{width:180px;height:180px;background:#0E5A6B;top:45%;right:35%;animation-delay:-9s;opacity:.16}
+  @keyframes floaty{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-26px,30px) scale(1.08)}66%{transform:translate(22px,-24px) scale(.96)}}
+  .chat > .msg, .chat > .typing, .chat > .dl{position:relative;z-index:1}
+  .msg{max-width:82%;padding:11px 15px;border-radius:16px;font-size:14.5px;line-height:1.8;white-space:pre-wrap;word-wrap:break-word;position:relative;z-index:1}
   .msg.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-right-radius:5px;color:#1e3338}
   .msg.user{align-self:flex-end;background:var(--teal-700);color:#fff;border-bottom-left-radius:5px}
   .msg.sys{align-self:center;background:rgba(201,162,75,.12);color:#7a6225;font-size:12.5px;border-radius:10px;padding:6px 12px}
@@ -76,6 +97,23 @@
   .btn-mic.rec svg{fill:#fff}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(214,69,69,.5)}50%{box-shadow:0 0 0 10px rgba(214,69,69,0)}}
   .hint{text-align:center;font-size:11.5px;color:var(--muted);padding:0 14px 10px;background:#fff}
+
+  /* ====== فيديو الإرشاد في الركن ====== */
+  .guide{position:fixed;top:74px;right:14px;width:200px;z-index:60;border-radius:16px;overflow:hidden;
+    box-shadow:0 16px 40px -16px rgba(11,54,64,.65);border:2px solid var(--gold);background:#06262E;
+    opacity:0;transform:translateY(-10px) scale(.96);transition:opacity .5s ease,transform .5s ease}
+  .guide.show{opacity:1;transform:none}
+  .guide video{width:100%;display:block;aspect-ratio:1/1;object-fit:cover;background:#06262E}
+  .guide .g-cap{font-size:11px;color:#fff;background:rgba(11,54,64,.92);padding:7px 9px;line-height:1.5;text-align:center}
+  .guide .g-btns{position:absolute;top:6px;left:6px;display:flex;gap:6px}
+  .guide .g-btns button{width:27px;height:27px;border-radius:50%;border:none;cursor:pointer;background:rgba(11,54,64,.75);color:#fff;font-size:13px;display:grid;place-items:center;backdrop-filter:blur(3px)}
+  .guide .g-btns button:hover{background:rgba(11,54,64,.95)}
+  @media(max-width:620px){.guide{width:138px;top:62px}}
+  @media(prefers-reduced-motion:reduce){.orb{animation:none}.guide{transition:none}}
+  @media(prefers-reduced-motion:reduce){
+    body::before,body::after,.welcome-strip{animation:none}
+    .sq{display:none}
+  }
 </style>
 </head>
 <body>
@@ -104,10 +142,10 @@
 
   <div class="welcome-strip">
     <h1>أهلاً بك في منصة جهات</h1>
-    <p>صِف العقد الذي تريده — كتابةً أو صوتاً 🎤 — وسأسألك عمّا ينقص ثم أُصدر لك العقد جاهزاً.</p>
+    <p>صِف العقد الذي تريده — كتابةً أو صوتاً 🎤. سأطرح عليك بعض الأسئلة البسيطة عن الأطراف والتفاصيل، <b>أجب عنها بدقّة</b> ليخرج عقدك مكتملاً واحترافياً.</p>
   </div>
 
-  <div class="chat" id="chat"></div>
+  <div class="chat" id="chat"><div class="bg-orbs"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div></div>
 
   <div class="hint" id="hint">اكتب رسالتك، أو اضغط المايك وتحدّث</div>
   <div class="composer">
@@ -121,10 +159,36 @@
   </div>
 </div>
 
+<!-- فيديو الإرشاد في الركن -->
+<div class="guide" id="guide">
+  <div class="g-btns">
+    <button class="g-sound" id="gSound" aria-label="الصوت">🔊</button>
+    <button class="g-close" id="gClose" aria-label="إغلاق">✕</button>
+  </div>
+  <video id="guideVid" playsinline muted autoplay loop poster="poster.jpg" src="guide.mp4"></video>
+  <div class="g-cap">سأطرح عليك بعض الأسئلة — أجب عنها ليخرج عقدك دقيقاً</div>
+</div>
+
 <script>
   var CHAT_WEBHOOK  = "https://148-230-114-103.nip.io/webhook/odoo-chat";
   var VOICE_WEBHOOK = "https://148-230-114-103.nip.io/webhook/odoo-voice";
   var SESSION = "odoo-" + Math.random().toString(36).slice(2,10);
+
+  // مربعات جهات الطايرة في الخلفية
+  (function(){
+    if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    var cols=['#C9A24B','#1A9E94','#2E86C1','#7DCE82','#E6C84F'];
+    for(var i=0;i<11;i++){
+      var s=document.createElement('div');s.className='sq';
+      var sz=8+Math.random()*16;
+      s.style.width=sz+'px';s.style.height=sz+'px';
+      s.style.left=Math.random()*100+'vw';
+      s.style.background=cols[i%cols.length];
+      s.style.animationDuration=(12+Math.random()*14)+'s';
+      s.style.animationDelay=(-Math.random()*18)+'s';
+      document.body.appendChild(s);
+    }
+  })();
 
   var chat=document.getElementById('chat');
   var inp=document.getElementById('inp');
@@ -208,6 +272,17 @@
     }).catch(function(){ el('msg sys','يرجى السماح باستخدام المايكروفون.'); });
   });
 
+  // ====== فيديو الإرشاد بالركن ======
+  (function(){
+    var g=document.getElementById('guide'),gv=document.getElementById('guideVid');
+    var gs=document.getElementById('gSound'),gc=document.getElementById('gClose');
+    var hidden=false;
+    gv.addEventListener('error',function(){ g.style.display='none'; hidden=true; });
+    gc.addEventListener('click',function(){ g.style.display='none'; gv.pause(); });
+    gs.addEventListener('click',function(){ gv.muted=!gv.muted; gs.textContent=gv.muted?'🔊':'🔈'; if(!gv.muted){gv.currentTime=0;var p=gv.play();if(p&&p.catch)p.catch(function(){});} });
+    window.__startGuide=function(){ if(hidden)return; g.classList.add('show'); var p=gv.play(); if(p&&p.catch)p.catch(function(){}); };
+  })();
+
   // ====== شاشة الفيديو ======
   (function(){
     var intro=document.getElementById('intro'),v=document.getElementById('introVid');
@@ -218,7 +293,8 @@
     function tp(){var p=v.play();if(p&&p.catch)p.catch(function(){});} tp();
     function close(){ if(done)return; done=true; v.pause(); intro.classList.add('hide'); document.body.classList.remove('intro-open');
       setTimeout(function(){intro.style.display='none';},820);
-      setTimeout(function(){ if(!chat.children.length) el('msg bot','أهلاً بك 👋 صِف العقد الذي تريده (مثال: عقد تطوير تطبيق بين شركة … وشركة … بقيمة …)، أو اضغط المايك وتحدّث.'); },900);
+      setTimeout(function(){ if(!chat.querySelector('.msg')) el('msg bot','أهلاً بك 👋 صِف العقد الذي تريده (مثال: عقد تطوير تطبيق بين شركة … وشركة … بقيمة …)، أو اضغط المايك وتحدّث.'); },900);
+      setTimeout(function(){ if(window.__startGuide) window.__startGuide(); },700);
     }
     sB.addEventListener('click',function(){v.muted=!v.muted;if(!v.muted){v.currentTime=0;tp();lbl.textContent='كتم';iM.style.display='none';iS.style.display='block';}else{lbl.textContent='تشغيل الصوت';iM.style.display='block';iS.style.display='none';}});
     skip.addEventListener('click',close);
