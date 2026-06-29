@@ -9,89 +9,90 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --teal-900:#0B3640;--teal-700:#0E5A6B;--teal-500:#1A9E94;
-    --gold:#C9A24B;--ivory:#FBFAF7;--ink:#14272C;--muted:#5C6B6E;--line:rgba(14,90,107,.14);
-  }
+  /* webhook العقد الواحد (غيّره هنا فقط لو اتغيّر):
+     https://148-230-114-103.nip.io/webhook/odoo-contract?ref=  */
+  :root{--teal-900:#0B3640;--teal-700:#0E5A6B;--teal-500:#1A9E94;--gold:#C9A24B;--ivory:#FBFAF7;--ink:#14272C;--muted:#5C6B6E;--line:rgba(14,90,107,.14)}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Tajawal',sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh;
-       display:flex;flex-direction:column;align-items:center;padding:30px 20px;-webkit-font-smoothing:antialiased}
+  body{font-family:'Tajawal',sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px 20px;-webkit-font-smoothing:antialiased}
   .top{display:flex;align-items:center;gap:10px;margin-bottom:26px}
-  .top img{height:42px}
-  .top .nf{color:var(--muted);font-size:13px;font-weight:500;border-right:1px solid var(--line);padding-right:10px}
-  .card{
-    width:100%;max-width:560px;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;
-    box-shadow:0 30px 70px -40px rgba(11,54,64,.45)
-  }
+  .top img{height:42px}.top .nf{color:var(--muted);font-size:13px;font-weight:500;border-right:1px solid var(--line);padding-right:10px}
+  .card{width:100%;max-width:560px;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 30px 70px -40px rgba(11,54,64,.45)}
   .band{background:linear-gradient(160deg,var(--teal-700),var(--teal-900));color:#fff;padding:30px 28px;text-align:center;position:relative}
   .band::after{content:"";position:absolute;inset:auto 0 0 0;height:3px;background:var(--gold)}
-  .check{width:62px;height:62px;margin:0 auto 14px;border-radius:50%;background:rgba(255,255,255,.12);
-         border:1.5px solid var(--gold);display:grid;place-items:center}
+  .check{width:62px;height:62px;margin:0 auto 14px;border-radius:50%;background:rgba(255,255,255,.12);border:1.5px solid var(--gold);display:grid;place-items:center}
   .check svg{width:30px;height:30px;stroke:var(--gold);fill:none;stroke-width:2.4}
-  .band h1{font-family:'Aref Ruqaa',serif;font-size:24px;font-weight:700;margin-bottom:4px}
+  .band.bad .check{border-color:#e8a0a0}.band.bad .check svg{stroke:#e8a0a0}
+  .band h1{font-family:'Aref Ruqaa',serif;font-size:23px;font-weight:700;margin-bottom:4px}
   .band p{color:#cfe1e2;font-size:14px}
-  .body{padding:26px 28px}
-  .row{display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px dashed var(--line)}
-  .row:last-child{border-bottom:none}
-  .row .k{color:var(--muted);font-size:14px}
+  .body{padding:24px 28px}
+  .row{display:flex;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border-bottom:none}.row .k{color:var(--muted);font-size:14px}
   .row .v{color:var(--teal-700);font-weight:700;font-size:15px;text-align:left;word-break:break-word}
-  .status{display:inline-block;background:rgba(26,158,148,.12);color:var(--teal-700);
-          font-weight:700;font-size:13px;padding:4px 12px;border-radius:999px}
-  .note{margin-top:18px;background:#f4f8f9;border:1px solid var(--line);border-radius:12px;
-        padding:14px 16px;color:#33474B;font-size:13px;line-height:1.8}
-  .foot{margin-top:26px;text-align:center;color:var(--muted);font-size:13px}
+  .status{display:inline-block;background:rgba(26,158,148,.12);color:var(--teal-700);font-weight:700;font-size:13px;padding:4px 12px;border-radius:999px}
+  .dlbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:18px;background:var(--gold);color:#1c1c1c;text-decoration:none;font-weight:700;font-size:15px;padding:14px;border-radius:12px;border:none;cursor:pointer;font-family:inherit}
+  .dlbtn:hover{background:#d8b25e}.dlbtn svg{width:19px;height:19px;fill:#1c1c1c}
+  .note{margin-top:16px;background:#f4f8f9;border:1px solid var(--line);border-radius:12px;padding:13px 15px;color:#33474B;font-size:12.5px;line-height:1.8}
+  .foot{margin-top:24px;text-align:center;color:var(--muted);font-size:13px}
   .foot .brand{font-family:'Aref Ruqaa',serif;color:var(--teal-700);font-size:16px;margin-bottom:4px}
-  .home{display:inline-block;margin-top:14px;color:var(--teal-700);text-decoration:none;font-weight:500;font-size:14px}
-  .home:hover{color:var(--gold)}
+  .home{display:inline-block;margin-top:12px;color:var(--teal-700);text-decoration:none;font-weight:500;font-size:14px}
+  .loading{padding:30px;text-align:center;color:var(--muted)}
 </style>
 </head>
 <body>
-  <div class="top">
-    <img src="jehat_logo.png" alt="منصة جهات">
-    <span class="nf">متكاملة مع نفاذ</span>
-  </div>
-
-  <div class="card">
-    <div class="band">
-      <div class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
-      <h1>مستند صادر عبر منصة جهات</h1>
-      <p>تم العثور على المستند المطابق للرقم المرجعي</p>
-    </div>
-    <div class="body">
-      <div class="row"><span class="k">الرقم المرجعي</span><span class="v" id="ref">—</span></div>
-      <div class="row"><span class="k">حالة المستند</span><span class="v"><span class="status">صادر إلكترونياً</span></span></div>
-      <div class="row"><span class="k">جهة الإصدار</span><span class="v">منصة جهات</span></div>
-      <div class="row"><span class="k">تاريخ التحقق</span><span class="v" id="today">—</span></div>
-
-      <div class="note">
-        هذا المستند صادر إلكترونياً عبر منصة جهات ويحمل رقماً مرجعياً فريداً.
-        لإتمام التوثيق الرسمي للتوقيع الإلكتروني، يُرفع المستند على بوابة نفاذ ويُعتمد من الجهة المختصة.
-      </div>
-    </div>
-  </div>
-
+  <div class="top"><img src="jehat_logo.png" alt="منصة جهات"><span class="nf">متكاملة مع نفاذ</span></div>
+  <div class="card" id="card"><div class="loading">جارٍ التحقق من المستند…</div></div>
   <div class="foot">
     <div class="brand">منصة جهات</div>
     <div>الرياض · info@jehat.sa · 0553777769</div>
     <a class="home" href="./">→ العودة إلى منصة جهات</a>
   </div>
-
 <script>
-  // الرقم المرجعي يجي من الرابط: /c/?ref=JEHAT-2026-0512  أو  #JEHAT-2026-0512
-  (function(){
-    var ref = new URLSearchParams(location.search).get('ref')
-              || decodeURIComponent((location.hash||'').replace('#',''))
-              || (location.pathname.split('/').filter(Boolean).pop()||'');
-    ref = (ref||'').trim();
-    if(ref && ref.toLowerCase()!=='c' && ref.toLowerCase()!=='index.html'){
-      document.getElementById('ref').textContent = ref;
-    } else {
-      document.getElementById('ref').textContent = 'غير محدد';
+  var ONE_WEBHOOK = "https://148-230-114-103.nip.io/webhook/odoo-contract?ref=";
+  function qp(){ return (new URLSearchParams(location.search).get('ref')||'').trim(); }
+  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+  function b64ToBlob(b64,type){var bin=atob(b64);var a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:type});}
+
+  function today(){var d=new Date();return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');}
+
+  function showFound(c){
+    var card=document.getElementById('card');
+    var dl='';
+    card.innerHTML=''+
+      '<div class="band"><div class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>'+
+      '<h1>مستند صادر عبر منصة جهات</h1><p>تم العثور على المستند المطابق للرقم المرجعي</p></div>'+
+      '<div class="body">'+
+      '<div class="row"><span class="k">الرقم المرجعي</span><span class="v" style="direction:ltr">'+esc(c.ref)+'</span></div>'+
+      '<div class="row"><span class="k">نوع المستند</span><span class="v">'+esc(c.title)+'</span></div>'+
+      (c.issued_by&&c.issued_by!=='—'?'<div class="row"><span class="k">جهة الإصدار</span><span class="v">'+esc(c.issued_by)+'</span></div>':'')+
+      '<div class="row"><span class="k">الحالة</span><span class="v"><span class="status">صادر إلكترونياً</span></span></div>'+
+      '<div class="row"><span class="k">تاريخ الإصدار</span><span class="v">'+esc(c.date||today())+'</span></div>'+
+      '<div id="dlwrap"></div>'+
+      '<div class="note">هذا المستند صادر إلكترونياً عبر منصة جهات ويحمل رقماً مرجعياً فريداً. لإتمام التوثيق الرسمي للتوقيع الإلكتروني يُرفع المستند على بوابة نفاذ ويُعتمد من الجهة المختصة.</div>'+
+      '</div>';
+    if(c.pdf_b64){
+      var a=document.createElement('a');a.className='dlbtn';
+      a.href=URL.createObjectURL(b64ToBlob(c.pdf_b64,'application/pdf'));
+      a.download=(c.ref||'contract')+'.pdf';
+      a.innerHTML='<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg> تحميل نسخة العقد (PDF)';
+      document.getElementById('dlwrap').appendChild(a);
     }
-    var d=new Date();
-    document.getElementById('today').textContent =
-      d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');
-  })();
+  }
+  function showNotFound(ref){
+    document.getElementById('card').innerHTML=''+
+      '<div class="band bad"><div class="check"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></div>'+
+      '<h1>لم يتم العثور على المستند</h1><p>الرقم المرجعي غير مسجّل لدى المنصة</p></div>'+
+      '<div class="body"><div class="row"><span class="k">الرقم المرجعي</span><span class="v" style="direction:ltr">'+esc(ref||'غير محدد')+'</span></div>'+
+      '<div class="note">قد يكون المستند صادراً قبل تفعيل السجل، أو الرقم غير صحيح. للاستفسار تواصل مع منصة جهات.</div></div>';
+  }
+
+  var ref=qp();
+  if(!ref){ showNotFound(''); }
+  else{
+    fetch(ONE_WEBHOOK+encodeURIComponent(ref)).then(function(r){return r.json();}).then(function(d){
+      if(d&&d.found&&d.contract){ showFound(d.contract); }
+      else{ showNotFound(ref); }
+    }).catch(function(){ showNotFound(ref); });
+  }
 </script>
 </body>
 </html>
