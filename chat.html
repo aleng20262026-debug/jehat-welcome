@@ -142,7 +142,10 @@
       <img src="jehat_logo.png" alt="جهات">
       <span class="t">وكيل صياغة العقود</span>
     </div>
-    <span class="nf">متكاملة مع نفاذ</span>
+    <a href="contracts.html" target="_blank" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--teal-700);font-size:13px;font-weight:700;border:1.5px solid var(--teal-700);border-radius:999px;padding:7px 14px;transition:.2s" onmouseover="this.style.background='var(--teal-700)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--teal-700)'">
+      <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8"><path d="M6 2h9l5 5v15H6zM14 2v6h6M8 13h8M8 17h6"/></svg>
+      سجل العقود
+    </a>
   </header>
 
   <div class="welcome-strip">
@@ -277,17 +280,19 @@
     }).catch(function(){ el('msg sys','يرجى السماح باستخدام المايكروفون.'); });
   });
 
-  // ====== فيديو الإرشاد (نافذة وسط، تتقفل لوحدها) ======
+  // ====== فيديو الإرشاد (نافذة وسط، تظهر فقط لو الفيديو موجود، وتتقفل لوحدها) ======
   (function(){
     var g=document.getElementById('guide'),gv=document.getElementById('guideVid');
     var gs=document.getElementById('gSound'),gc=document.getElementById('gClose');
-    var hidden=false;
+    var hidden=false, wantShow=false, shown=false;
+    function reveal(){ if(hidden||shown||!wantShow)return; shown=true; g.style.display='flex'; void g.offsetWidth; g.classList.add('show'); var p=gv.play(); if(p&&p.catch)p.catch(function(){}); }
     function closeG(){ g.classList.remove('show'); gv.pause(); setTimeout(function(){g.style.display='none';},450); }
     gv.addEventListener('error',function(){ hidden=true; g.style.display='none'; });
-    gv.addEventListener('ended',closeG);          // يتقفل لوحده لما يخلّص
+    gv.addEventListener('loadeddata',reveal);     // تظهر فقط لما يتحمّل فيديو حقيقي
+    gv.addEventListener('ended',closeG);           // تتقفل لوحدها لما يخلّص
     gc.addEventListener('click',closeG);
     gs.addEventListener('click',function(){ gv.muted=!gv.muted; gs.textContent=gv.muted?'🔊':'🔈'; if(!gv.muted){var p=gv.play();if(p&&p.catch)p.catch(function(){});} });
-    window.__startGuide=function(){ if(hidden)return; g.style.display='flex'; void g.offsetWidth; g.classList.add('show'); var p=gv.play(); if(p&&p.catch)p.catch(function(){}); };
+    window.__startGuide=function(){ wantShow=true; if(gv.readyState>=2) reveal(); };
   })();
 
   // ====== شاشة الفيديو ======
