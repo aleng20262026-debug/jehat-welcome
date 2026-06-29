@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وكيل صياغة العقود — منصة جهات</title>
+<link rel="icon" href="jehat_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ====== الإعدادات (لو اتغيّر عنوان n8n غيّرهم هنا فقط) ====== */
+  /* CHAT  : https://148-230-114-103.nip.io/webhook/odoo-chat   */
+  /* VOICE : https://148-230-114-103.nip.io/webhook/odoo-voice  */
+
+  :root{
+    --teal-900:#0B3640;--teal-700:#0E5A6B;--teal-500:#1A9E94;
+    --gold:#C9A24B;--ivory:#FBFAF7;--ink:#14272C;--muted:#5C6B6E;--line:rgba(14,90,107,.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Tajawal',sans-serif;background:var(--ivory);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .noscript-hide{}
+
+  /* ====== شاشة الفيديو الافتتاحية ====== */
+  .intro{position:fixed;inset:0;z-index:9999;background:#06262E;display:flex;align-items:center;justify-content:center;transition:opacity .8s ease,visibility .8s ease}
+  .intro.hide{opacity:0;visibility:hidden}
+  .intro-vid{width:100%;height:100%;object-fit:contain;background:#06262E}
+  .intro-bar{position:absolute;bottom:26px;left:0;right:0;display:flex;justify-content:center;gap:14px;padding:0 20px}
+  .isound,.iskip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:600;border-radius:999px;padding:12px 22px;backdrop-filter:blur(6px);transition:transform .2s,background .25s}
+  .isound{background:rgba(11,54,64,.6);color:#fff;border:1px solid rgba(201,162,75,.6)}
+  .isound svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .iskip{background:var(--gold);color:#1c1c1c;border:none}
+  .iskip:hover,.isound:hover{transform:translateY(-1px)}
+  body.intro-open{overflow:hidden}
+
+  /* ====== الهيكل ====== */
+  .app{display:flex;flex-direction:column;height:100vh;max-width:760px;margin:0 auto;background:#fff;box-shadow:0 0 60px -30px rgba(11,54,64,.4)}
+  header.bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:#fff}
+  header.bar .id{display:flex;align-items:center;gap:10px}
+  header.bar img{height:34px}
+  header.bar .t{font-weight:700;color:var(--teal-700);font-size:15px}
+  header.bar .nf{color:var(--muted);font-size:12px}
+
+  .welcome-strip{padding:16px 18px;background:linear-gradient(160deg,var(--teal-700),var(--teal-900));color:#fff}
+  .welcome-strip h1{font-family:'Aref Ruqaa',serif;font-size:19px;margin-bottom:4px}
+  .welcome-strip p{font-size:13px;color:#cfe1e2;line-height:1.7}
+
+  .chat{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:var(--ivory)}
+  .msg{max-width:82%;padding:11px 15px;border-radius:16px;font-size:14.5px;line-height:1.8;white-space:pre-wrap;word-wrap:break-word}
+  .msg.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-right-radius:5px;color:#1e3338}
+  .msg.user{align-self:flex-end;background:var(--teal-700);color:#fff;border-bottom-left-radius:5px}
+  .msg.sys{align-self:center;background:rgba(201,162,75,.12);color:#7a6225;font-size:12.5px;border-radius:10px;padding:6px 12px}
+  .typing{align-self:flex-start;display:flex;gap:4px;padding:12px 16px;background:#fff;border:1px solid var(--line);border-radius:16px}
+  .typing span{width:7px;height:7px;border-radius:50%;background:var(--teal-500);opacity:.5;animation:bl 1s infinite}
+  .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+  @keyframes bl{0%,100%{opacity:.3}50%{opacity:1}}
+
+  .dl{align-self:flex-start;display:flex;flex-direction:column;gap:8px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;max-width:82%}
+  .dl .dt{font-size:13px;color:var(--muted)}
+  .dl a{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#1c1c1c;text-decoration:none;font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px;transition:background .2s}
+  .dl a:hover{background:#d8b25e}
+  .dl a.word{background:var(--teal-700);color:#fff}
+  .dl a svg{width:18px;height:18px}
+
+  .composer{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--line);background:#fff}
+  .composer input{flex:1;border:1px solid var(--line);border-radius:999px;padding:12px 18px;font-family:'Tajawal',sans-serif;font-size:15px;outline:none}
+  .composer input:focus{border-color:var(--teal-500)}
+  .btn-ic{width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:transform .15s,background .2s}
+  .btn-ic:hover{transform:scale(1.05)}
+  .btn-send{background:var(--teal-700)}
+  .btn-send svg{width:20px;height:20px;fill:#fff}
+  .btn-mic{background:var(--gold)}
+  .btn-mic svg{width:20px;height:20px;fill:#1c1c1c}
+  .btn-mic.rec{background:#d64545;animation:pulse 1.2s infinite}
+  .btn-mic.rec svg{fill:#fff}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(214,69,69,.5)}50%{box-shadow:0 0 0 10px rgba(214,69,69,0)}}
+  .hint{text-align:center;font-size:11.5px;color:var(--muted);padding:0 14px 10px;background:#fff}
+</style>
+</head>
+<body>
+
+<!-- شاشة الفيديو الافتتاحية -->
+<div id="intro" class="intro">
+  <video id="introVid" class="intro-vid" playsinline muted autoplay preload="auto" poster="poster.jpg" src="welcome.mp4"></video>
+  <div class="intro-bar">
+    <button class="isound" id="introSound" aria-label="الصوت">
+      <svg id="iMute" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M16 9l5 6M21 9l-5 6"/></svg>
+      <svg id="iSound" viewBox="0 0 24 24" style="display:none"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7M18 6a9 9 0 010 12"/></svg>
+      <span id="iLbl">تشغيل الصوت</span>
+    </button>
+    <button class="iskip" id="introSkip">دخول <span aria-hidden="true">←</span></button>
+  </div>
+</div>
+
+<div class="app">
+  <header class="bar">
+    <div class="id">
+      <img src="jehat_logo.png" alt="جهات">
+      <span class="t">وكيل صياغة العقود</span>
+    </div>
+    <span class="nf">متكاملة مع نفاذ</span>
+  </header>
+
+  <div class="welcome-strip">
+    <h1>أهلاً بك في منصة جهات</h1>
+    <p>صِف العقد الذي تريده — كتابةً أو صوتاً 🎤 — وسأسألك عمّا ينقص ثم أُصدر لك العقد جاهزاً.</p>
+  </div>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="hint" id="hint">اكتب رسالتك، أو اضغط المايك وتحدّث</div>
+  <div class="composer">
+    <button class="btn-ic btn-mic" id="micBtn" aria-label="تسجيل صوتي" title="تسجيل صوتي">
+      <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V6a3 3 0 00-6 0v5a3 3 0 003 3z"/><path d="M19 11a7 7 0 01-14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <input id="inp" type="text" placeholder="اكتب رسالتك هنا..." autocomplete="off">
+    <button class="btn-ic btn-send" id="sendBtn" aria-label="إرسال">
+      <svg viewBox="0 0 24 24"><path d="M3.4 20.4l17.45-7.48a1 1 0 000-1.84L3.4 3.6a.993.993 0 00-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  var CHAT_WEBHOOK  = "https://148-230-114-103.nip.io/webhook/odoo-chat";
+  var VOICE_WEBHOOK = "https://148-230-114-103.nip.io/webhook/odoo-voice";
+  var SESSION = "odoo-" + Math.random().toString(36).slice(2,10);
+
+  var chat=document.getElementById('chat');
+  var inp=document.getElementById('inp');
+  var sendBtn=document.getElementById('sendBtn');
+  var micBtn=document.getElementById('micBtn');
+
+  function el(cls,txt){var d=document.createElement('div');d.className=cls;if(txt!=null)d.textContent=txt;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
+  function typing(){var d=document.createElement('div');d.className='typing';d.innerHTML='<span></span><span></span><span></span>';chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
+
+  function b64ToBlob(b64,type){var bin=atob(b64);var arr=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:type});}
+
+  function showDownloads(files){
+    var box=document.createElement('div');box.className='dl';
+    var t=document.createElement('div');t.className='dt';t.textContent='عقدك جاهز ✅ — حمّله من هنا:';box.appendChild(t);
+    if(files.pdf){
+      var a=document.createElement('a');a.href=URL.createObjectURL(b64ToBlob(files.pdf.b64,'application/pdf'));
+      a.download=files.pdf.name||'contract.pdf';
+      a.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".25"/><path d="M14 2v6h6"/></svg> تحميل PDF';box.appendChild(a);
+    }
+    if(files.docx){
+      var b=document.createElement('a');b.className='word';b.href=URL.createObjectURL(b64ToBlob(files.docx.b64,'application/vnd.openxmlformats-officedocument.wordprocessingml.document'));
+      b.download=files.docx.name||'contract.docx';
+      b.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9l5 5v15H6z" opacity=".25"/><path d="M14 2v6h6"/></svg> تحميل Word';box.appendChild(b);
+    }
+    chat.appendChild(box);chat.scrollTop=chat.scrollHeight;
+  }
+
+  function handleReply(data){
+    if(data && data.message) el('msg bot', data.message);
+    if(data && data.mode==='done'){
+      if(!data.message && data.preview) el('msg bot', data.preview);
+      if(data.files) showDownloads(data.files);
+      el('msg sys','يمكنك بدء عقد جديد بكتابة نوع العقد.');
+    }
+  }
+
+  function sendText(text){
+    if(!text) return;
+    el('msg user', text);
+    var tp=typing();
+    fetch(CHAT_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({session_id:SESSION,text:text})})
+    .then(function(r){return r.json();})
+    .then(function(d){tp.remove();handleReply(d);})
+    .catch(function(){tp.remove();el('msg bot','تعذّر الاتصال، حاول مرة أخرى.');});
+  }
+
+  sendBtn.addEventListener('click',function(){var t=inp.value.trim();if(t){inp.value='';sendText(t);}});
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'){var t=inp.value.trim();if(t){inp.value='';sendText(t);}}});
+
+  // ====== التسجيل الصوتي ======
+  var mediaRec=null, chunks=[], recording=false;
+  micBtn.addEventListener('click',function(){
+    if(recording){ if(mediaRec) mediaRec.stop(); return; }
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ el('msg sys','المتصفح لا يدعم التسجيل الصوتي.'); return; }
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      chunks=[]; mediaRec=new MediaRecorder(stream);
+      mediaRec.ondataavailable=function(e){if(e.data.size>0)chunks.push(e.data);};
+      mediaRec.onstop=function(){
+        recording=false; micBtn.classList.remove('rec');
+        stream.getTracks().forEach(function(t){t.stop();});
+        var blob=new Blob(chunks,{type:'audio/webm'});
+        var tp=typing();
+        var fr=new FileReader();
+        fr.onloadend=function(){
+          var b64=(fr.result+'').split(',')[1]||'';
+          fetch(VOICE_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({audio_b64:b64,mime:'audio/webm'})})
+          .then(function(r){return r.json();})
+          .then(function(d){
+            tp.remove();
+            var text=(d&&d.text||'').trim();
+            if(text){ sendText(text); }
+            else { el('msg sys','لم أتمكن من سماع الصوت، حاول مرة أخرى.'); }
+          })
+          .catch(function(){tp.remove();el('msg sys','تعذّر إرسال الصوت.');});
+        };
+        fr.readAsDataURL(blob);
+      };
+      mediaRec.start(); recording=true; micBtn.classList.add('rec');
+    }).catch(function(){ el('msg sys','يرجى السماح باستخدام المايكروفون.'); });
+  });
+
+  // ====== شاشة الفيديو ======
+  (function(){
+    var intro=document.getElementById('intro'),v=document.getElementById('introVid');
+    var sB=document.getElementById('introSound'),lbl=document.getElementById('iLbl');
+    var iM=document.getElementById('iMute'),iS=document.getElementById('iSound'),skip=document.getElementById('introSkip');
+    var done=false;
+    document.body.classList.add('intro-open');
+    function tp(){var p=v.play();if(p&&p.catch)p.catch(function(){});} tp();
+    function close(){ if(done)return; done=true; v.pause(); intro.classList.add('hide'); document.body.classList.remove('intro-open');
+      setTimeout(function(){intro.style.display='none';},820);
+      setTimeout(function(){ if(!chat.children.length) el('msg bot','أهلاً بك 👋 صِف العقد الذي تريده (مثال: عقد تطوير تطبيق بين شركة … وشركة … بقيمة …)، أو اضغط المايك وتحدّث.'); },900);
+    }
+    sB.addEventListener('click',function(){v.muted=!v.muted;if(!v.muted){v.currentTime=0;tp();lbl.textContent='كتم';iM.style.display='none';iS.style.display='block';}else{lbl.textContent='تشغيل الصوت';iM.style.display='block';iS.style.display='none';}});
+    skip.addEventListener('click',close);
+    v.addEventListener('ended',close);
+  })();
+</script>
+</body>
+</html>
